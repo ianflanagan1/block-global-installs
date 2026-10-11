@@ -1,0 +1,14 @@
+{
+  "name": "block-global-installs",
+  "description": "A hook that stops Claude installing software globally (brew, npm -g, pipx, cargo install, curl | sh, sudo...) so tools go into devbox instead.",
+  "owner": {
+    "name": "Ian Flanagan"
+  },
+  "plugins": [
+    {
+      "name": "block-global-installs",
+      "source": "./",
+      "description": "A hook that stops Claude installing software globally (brew, npm -g, pipx, cargo install, curl | sh, sudo...) so tools go into devbox instead."
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 # block-global-installs
 
-A Claude Code plugin that stops Claude installing software globally on your machine, so tools go into [devbox](https://www.jetify.com/devbox) instead: a project's `devbox.json` (`devbox add`) or global devbox (`devbox global add`).
+A Claude Code hook that stops Claude installing software globally on your machine, so tools go into [devbox](https://www.jetify.com/devbox) instead: a project's `devbox.json` (`devbox add`) or global devbox (`devbox global add`).
 
 ## What it blocks
 
-The plugin's `PreToolUse` hook (`scripts/block-global-installs.sh`) reads every Bash command Claude is about to run and refuses it (exit 2) when it contains:
+The `PreToolUse` hook (`scripts/block-global-installs.sh`) reads every Bash command Claude is about to run and refuses it (exit 2) when it contains:
 
 - brew `install`/`reinstall`/`upgrade`/`tap`/`link`/`bundle`, MacPorts, `mas install`, `installer -pkg`, `softwareupdate -i`
 - global npm, pnpm and bun packages (`-g`/`--global`), `yarn global add`
@@ -24,12 +24,23 @@ It only limits Claude. Commands you run yourself are unaffected.
 
 ## Install
 
-```
-/plugin marketplace add ianflanagan1/claude-block-global-installs
-/plugin install block-global-installs@block-global-installs
-```
+Clone to `~/projects/claude/block-global-installs`, then add the hook to `~/.claude/settings.json`. It runs straight from the clone, so changes to it apply from the next command:
 
-Or from a local clone, `/plugin marketplace add ~/projects/claude/block-global-installs` instead. Either way Claude Code runs a cached copy, so after changing the hook bump `version` in `.claude-plugin/plugin.json`, then run `/plugin marketplace update block-global-installs` and `/plugin update block-global-installs@block-global-installs`.
+```json
+"hooks": {
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"$HOME/projects/claude/block-global-installs/scripts/block-global-installs.sh\""
+        }
+      ]
+    }
+  ]
+}
+```
 
 Pair it with a rule in `~/.claude/CLAUDE.md` saying what to do instead, so Claude reaches for devbox before it hits the hook:
 

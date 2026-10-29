@@ -10,7 +10,7 @@ if [ ! -x "$jq" ]; then
     exit 1
 fi
 
-cmd=$("$jq" -r '.tool_input.command // empty')
+cmd=$("$jq" --raw-output '.tool_input.command // empty')
 [ -z "$cmd" ] && exit 0
 
 # Start of a command word: line start or a non-name character (so /opt/homebrew/bin/brew still matches).
@@ -23,21 +23,21 @@ block() {
 }
 
 # Checks that need the pipe intact.
-if printf '%s' "$cmd" | grep -Eq "${B}(curl|wget)[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba|z|fi)?sh${END}"; then
+if printf '%s' "$cmd" | grep --extended-regexp --quiet "${B}(curl|wget)[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba|z|fi)?sh${END}"; then
     block "piping a download into a shell"
 fi
-if printf '%s' "$cmd" | grep -Eq "${B}(ba|z)?sh[[:space:]]+-c[[:space:]]+[\"']?\\\$\((curl|wget)"; then
+if printf '%s' "$cmd" | grep --extended-regexp --quiet "${B}(ba|z)?sh[[:space:]]+-c[[:space:]]+[\"']?\\\$\((curl|wget)"; then
     block "running a downloaded script"
 fi
 
 # A pip install is project-local when it targets a virtualenv or runs inside devbox.
 pip_is_local=false
-if printf '%s' "$cmd" | grep -Eq '(devbox (run|shell)|\.venv/|venv/bin/|uv pip|poetry |pipenv )'; then
+if printf '%s' "$cmd" | grep --extended-regexp --quiet '(devbox (run|shell)|\.venv/|venv/bin/|uv pip|poetry |pipenv )'; then
     pip_is_local=true
 fi
 
 while IFS= read -r seg; do
-    matches() { printf '%s' "$seg" | grep -Eq "$1"; }
+    matches() { printf '%s' "$seg" | grep --extended-regexp --quiet "$1"; }
 
     matches "${B}sudo${END}" && block "sudo"
     matches "${B}brew[[:space:]]+(install|reinstall|upgrade|tap|link|bundle)${END}" && block "brew"

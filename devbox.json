@@ -8,7 +8,7 @@
   "shell": {
     "scripts": {
       "test": "sh tests/run.sh",
-      "lint": "shellcheck -x scripts/*.sh && shellcheck -x -s sh tests/*.sh"
+      "lint": "shellcheck --external-sources scripts/*.sh && shellcheck --external-sources --shell sh tests/*.sh"
     }
   }
 }

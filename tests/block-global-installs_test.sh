@@ -6,7 +6,7 @@ hook=$root/scripts/block-global-installs.sh
 
 # run command: the hook's exit status for the Bash tool running command.
 run() {
-    jq -n --arg c "$1" '{hook_event_name:"PreToolUse",tool_name:"Bash",tool_input:{command:$c}}' \
+    jq --null-input --arg c "$1" '{hook_event_name:"PreToolUse",tool_name:"Bash",tool_input:{command:$c}}' \
         | bash "$hook" 2>/dev/null
 }
 
@@ -111,7 +111,7 @@ test_ordinary_commands_are_allowed() {
 }
 
 test_a_blocked_command_tells_claude_to_use_devbox_and_ask_first() {
-    reason=$(jq -n '{tool_name:"Bash",tool_input:{command:"brew install jq"}}' | bash "$hook" 2>&1 >/dev/null)
+    reason=$(jq --null-input '{tool_name:"Bash",tool_input:{command:"brew install jq"}}' | bash "$hook" 2>&1 >/dev/null)
     assertContains "$reason" 'devbox add'
     assertContains "$reason" 'ask the user'
 }

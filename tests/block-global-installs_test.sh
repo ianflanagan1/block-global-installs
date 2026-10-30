@@ -1,5 +1,5 @@
 #!/bin/sh
-# Behaviour of scripts/block-global-installs.sh. Run with tests/run.sh.
+# Behaviour of scripts/block-global-installs.sh. Run with `devbox run -- task test`.
 
 root=$(cd "$(dirname "$0")/.." && pwd)
 hook=$root/scripts/block-global-installs.sh

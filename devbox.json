@@ -3,12 +3,7 @@
   "packages": [
     "shunit2@2.1.8",
     "shellcheck@latest",
-    "jq@latest"
-  ],
-  "shell": {
-    "scripts": {
-      "test": "sh tests/run.sh",
-      "lint": "shellcheck --external-sources scripts/*.sh && shellcheck --external-sources --shell sh tests/*.sh"
-    }
-  }
+    "jq@latest",
+    "go-task@3.53.1"
+  ]
 }

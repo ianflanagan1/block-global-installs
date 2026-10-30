@@ -53,6 +53,6 @@ Never install software globally on this machine. When a tool is missing, prefer 
 ## Development
 
 ```sh
-devbox run test   # shunit2
-devbox run lint   # shellcheck
+devbox run -- task test   # shunit2
+devbox run -- task lint   # shellcheck
 ```

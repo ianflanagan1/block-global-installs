@@ -191,7 +191,7 @@ test_reading_go_settings_and_ordinary_go_commands_are_allowed() {
 }
 
 test_the_sanctioned_pin_writer_and_the_check_are_allowed() {
-    assertAllowed 'go tool go-baseline write'
+    assertAllowed 'go tool go-ianf-strict-baseline write'
     assertAllowed 'devbox run -- task check'
 }
 
@@ -201,7 +201,7 @@ test_a_shell_edit_of_devbox_json_that_leaves_the_pin_alone_is_allowed() {
 
 test_a_pin_refusal_tells_claude_to_use_go_baseline_write_or_ask() {
     reason=$(jq --null-input '{tool_name:"Bash",tool_input:{command:"GOTOOLCHAIN=auto go build"}}' | bash "$hook" 2>&1 >/dev/null)
-    assertContains "$reason" 'go tool go-baseline write'
+    assertContains "$reason" 'go tool go-ianf-strict-baseline write'
     assertContains "$reason" 'ask the user'
 }
 

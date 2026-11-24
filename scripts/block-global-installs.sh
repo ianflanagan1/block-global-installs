@@ -2,7 +2,7 @@
 # PreToolUse hook for Bash, Edit, Write and MultiEdit. It blocks commands that install software
 # globally on this machine: tools belong in a project's devbox.json (devbox add) or global devbox
 # (devbox global add). It also blocks changes to the Go toolchain pin, and to the checksum and
-# flag settings beside it, that go-baseline writes into a project's devbox.json: a command that
+# flag settings beside it, that go-ianf-strict-baseline writes into a project's devbox.json: a command that
 # sets or unsets them, go env -w/-u, go get toolchain@/go@, and edits of devbox.json that change them.
 # Exit 2 blocks the tool call and shows stderr to Claude. Without jq it can't read the
 # call, so it lets it through with a visible error (exit 1) rather than block every call.
@@ -16,11 +16,11 @@ fi
 input=$(cat)
 field() { printf '%s' "$input" | "$jq" --raw-output "$1"; }
 
-# The settings go-baseline pins in devbox.json, as a whole word.
+# The settings go-ianf-strict-baseline pins in devbox.json, as a whole word.
 PIN_VAR='(^|[^[:alnum:]_])(GOTOOLCHAIN|GOSUMDB|GONOSUMDB|GONOSUMCHECK|GOPRIVATE|GOINSECURE|GOFLAGS)([^[:alnum:]_]|$)'
 
 block_pin() {
-    echo "Blocked: $1 would change or override the Go toolchain pin or the checksum and flag settings beside it. The Go toolchain is pinned by go-baseline: bump go-baseline and run \`go tool go-baseline write\`, or ask the user." >&2
+    echo "Blocked: $1 would change or override the Go toolchain pin or the checksum and flag settings beside it. The Go toolchain is pinned by go-ianf-strict-baseline: bump go-ianf-strict-baseline and run \`go tool go-ianf-strict-baseline write\`, or ask the user." >&2
     exit 2
 }
 

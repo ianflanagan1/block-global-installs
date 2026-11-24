@@ -20,7 +20,7 @@ It checks each part of a chained command (`cd x && brew install y`) and full pat
 
 ### The Go toolchain pin
 
-Go projects pin an exact toolchain (`GOTOOLCHAIN=go1.27.4`, no `+auto`) in their `devbox.json` env, written by `go tool go-baseline write` from the version the go-baseline release approves. A toolchain Go fetches outside that pin is a tool from outside devbox too, so the hook also refuses:
+Go projects pin an exact toolchain (`GOTOOLCHAIN=go1.27.4`, no `+auto`) in their `devbox.json` env, written by `go tool go-ianf-strict-baseline write` from the version the go-ianf-strict-baseline release approves. A toolchain Go fetches outside that pin is a tool from outside devbox too, so the hook also refuses:
 
 - a command that sets or unsets `GOTOOLCHAIN`, `GOSUMDB`, `GONOSUMDB`, `GONOSUMCHECK`, `GOPRIVATE`, `GOINSECURE` or `GOFLAGS` (`GOTOOLCHAIN=go1.28.0 go build`, `env GOTOOLCHAIN=auto go test`, `export GOFLAGS=…`, `unset GOTOOLCHAIN`, `env -u …`)
 - `go env -w` or `go env -u` of any of them
@@ -28,7 +28,7 @@ Go projects pin an exact toolchain (`GOTOOLCHAIN=go1.27.4`, no `+auto`) in their
 - a shell edit of `devbox.json` (`sed -i`, `perl -i`, a redirect, `tee`, `sponge`, `mv` or `cp` onto it) in a command that names one of them or a Go release (`go1.…`)
 - an Edit, MultiEdit or Write of a file named `devbox.json` that adds, changes or removes a line setting one of them (a Write is compared with the file on disk)
 
-The refusal tells Claude to bump go-baseline and run `go tool go-baseline write`, or to ask you. `go tool go-baseline write`, reads (`go env GOTOOLCHAIN`, `grep GOTOOLCHAIN devbox.json`), ordinary `go` commands and edits of `devbox.json` that leave those lines alone pass. The hook is the early layer that stops Claude's mistakes, not the guarantee: go-baseline's `verify`, run by each project's `check`, fails on any other pin and on `devbox.json` setting the checksum and flag variables.
+The refusal tells Claude to bump go-ianf-strict-baseline and run `go tool go-ianf-strict-baseline write`, or to ask you. `go tool go-ianf-strict-baseline write`, reads (`go env GOTOOLCHAIN`, `grep GOTOOLCHAIN devbox.json`), ordinary `go` commands and edits of `devbox.json` that leave those lines alone pass. The hook is the early layer that stops Claude's mistakes, not the guarantee: go-ianf-strict-baseline's `verify`, run by each project's `check`, fails on any other pin and on `devbox.json` setting the checksum and flag variables.
 
 It needs `jq`. Without it the hook lets every call through and reports an error on each one, so a missing `jq` is visible rather than silently unchecked.
 
